@@ -75,7 +75,7 @@ export const createLimiter = rateLimit({
  * Input sanitization middleware
  * Prevents injection attacks (SQL, NoSQL, XSS)
  */
-export function sanitizeInput(req: Request, res: Response, next: NextFunction): void {
+export function sanitizeInput(req: Request, _res: Response, next: NextFunction): void {
   // Sanitize body
   if (req.body) {
     req.body = sanitizeObject(req.body);
@@ -152,7 +152,7 @@ function sanitizeString(str: string): string {
  * Error handling middleware
  * Centralized error handling with proper logging
  */
-export function errorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
+export function errorHandler(err: any, req: Request, res: Response, _next: NextFunction): void {
   console.error('Error:', {
     message: err.message,
     stack: err.stack,
