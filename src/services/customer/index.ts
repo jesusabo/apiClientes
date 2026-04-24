@@ -8,7 +8,6 @@
  * - Exports configured routes
  */
 
-import { Router } from 'express';
 import { InMemoryCustomerRepository } from './infrastructure/InMemoryCustomerRepository';
 import { CreateCustomerUseCase } from './application/CreateCustomerUseCase';
 import { GetCustomerUseCase } from './application/GetCustomerUseCase';
