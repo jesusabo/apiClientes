@@ -1,464 +1,473 @@
-# Customer Management API
+# 🚀 Customer Management API
 
-Complete backend system for customer management with REST API, Clean Architecture, intelligent agent, and comprehensive testing.
+API REST completa para gestión de clientes con agente inteligente, construida con Node.js, Express.js y TypeScript siguiendo principios de Arquitectura Limpia y SOLID.
 
-## 🎯 Project Overview
+## 📋 Tabla de Contenidos
 
-This system provides a robust backend for managing customers with the following capabilities:
+- [Características](#características)
+- [Arquitectura](#arquitectura)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Ejecución](#ejecución)
+- [Testing](#testing)
+- [Endpoints API](#endpoints-api)
+- [Agente Inteligente](#agente-inteligente)
+- [Despliegue](#despliegue)
+- [Documentación](#documentación)
 
-- **CRUD Operations**: Create, Read, Update, and Delete customers via REST API
-- **Clean Architecture**: Clear separation of concerns (Domain, Application, Infrastructure)
-- **Intelligent Agent**: Natural language interface for system interaction
-- **Security**: Helmet, CORS, rate limiting, and input sanitization
-- **Testing**: Comprehensive unit and integration tests
-- **SOLID Principles**: Maintainable and extensible codebase
+## ✨ Características
 
-## 📁 Project Structure
+- ✅ **CRUD Completo**: Crear, leer, actualizar y eliminar clientes
+- 🤖 **Agente Inteligente**: Interacción mediante lenguaje natural
+- 🏗️ **Arquitectura Limpia**: Separación clara de capas (Domain, Application, Infrastructure)
+- 🔒 **Seguridad**: Helmet, CORS, rate limiting, sanitización de inputs
+- 🧪 **Testing**: Pruebas unitarias e integración con Jest
+- 📝 **Validación**: DTOs con validaciones robustas
+- 🐳 **Docker**: Containerización lista para producción
+- ☁️ **Cloud Ready**: Configuración para Azure Web App
+- 📚 **Documentación**: Arquitectura y diagramas incluidos
+
+## 🏛️ Arquitectura
 
 ```
-customer-management-api/
-├── src/
-│   ├── services/
-│   │   └── customer/
-│   │       ├── controllers/          # REST endpoint handlers
-│   │       ├── domain/                # Business entities and rules
-│   │       ├── application/           # Use cases (business logic)
-│   │       ├── infrastructure/        # Data persistence
-│   │       └── dto/                   # Data transfer objects
-│   ├── agent/
-│   │   ├── intents/                   # Natural language intent detection
-│   │   ├── orchestrator/              # Agent workflow management
-│   │   └── adapters/                  # Agent API interface
-│   ├── shared/
-│   │   └── middleware/                # Security and common middleware
-│   ├── config/                        # Configuration files
-│   └── server.ts                      # Application entry point
-├── tests/
-│   ├── unit/                          # Unit tests
-│   └── integration/                   # Integration tests
-├── package.json
-├── tsconfig.json
-└── jest.config.js
+src/
+├── services/
+│   └── customer/
+│       ├── domain/          # Entidades y reglas de negocio
+│       ├── application/     # Casos de uso
+│       ├── infrastructure/  # Repositorios e implementaciones
+│       ├── controllers/     # Controladores HTTP
+│       ├── dto/            # Data Transfer Objects
+│       └── index.ts        # Entry point del servicio
+├── agent/
+│   ├── intents/            # Clasificación de intenciones
+│   ├── orchestrator/       # Orquestación del agente
+│   ├── adapters/           # Adaptadores HTTP
+│   └── index.ts           # Entry point del agente
+├── shared/
+│   └── middleware/         # Middleware compartido
+├── config/                 # Configuración
+└── server.ts              # Punto de entrada principal
 ```
 
-## 🏗️ Architecture
+## 📦 Requisitos Previos
 
-### Clean Architecture Layers
+- **Node.js**: v18 o superior
+- **npm**: v9 o superior
+- **TypeScript**: v5.0 o superior (instalado automáticamente)
 
-1. **Domain Layer** (`domain/`)
-   - Pure business logic
-   - No external dependencies
-   - Contains entities and repository interfaces
+## 🔧 Instalación
 
-2. **Application Layer** (`application/`)
-   - Use cases (business workflows)
-   - Coordinates domain objects
-   - Independent of frameworks
+1. **Clonar o descargar el proyecto**
 
-3. **Infrastructure Layer** (`infrastructure/`)
-   - External dependencies (database, APIs)
-   - Repository implementations
-   - Framework-specific code
+```bash
+cd customer-management-api
+```
 
-4. **Interface Layer** (`controllers/`)
-   - REST API endpoints
-   - Request/response handling
-   - Connects HTTP to use cases
+2. **Instalar dependencias**
 
-## 📊 Data Model
+```bash
+npm install
+```
 
-### Customer Entity
+Esto instalará todas las dependencias necesarias:
+- Express.js (framework web)
+- TypeScript (tipado estático)
+- Jest (testing)
+- Helmet, CORS, express-rate-limit (seguridad)
+- Y todas las dependencias de desarrollo
 
-```typescript
+## 🚀 Ejecución
+
+### Modo Desarrollo
+
+```bash
+npm run dev
+```
+
+El servidor iniciará en `http://localhost:3000` con hot-reload activado.
+
+### Modo Producción
+
+```bash
+# Compilar TypeScript a JavaScript
+npm run build
+
+# Ejecutar la versión compilada
+npm start
+```
+
+### Verificar que el servidor está corriendo
+
+```bash
+curl http://localhost:3000/health
+```
+
+Respuesta esperada:
+```json
 {
-  id: string;              // Unique identifier (UUID)
-  name: string;            // Customer full name
-  documentNumber: string;  // National ID or document
-  email: string;           // Email address (unique)
-  phone: string;           // Phone number
-  address: string;         // Physical address
-  status: string;          // 'active' | 'inactive'
-  createdAt: Date;         // Creation timestamp
-  updatedAt: Date;         // Last update timestamp
+  "status": "healthy",
+  "environment": "development",
+  "timestamp": "2026-04-23T22:00:00.000Z",
+  "uptime": 123.456
 }
 ```
 
-### Business Rules
+## 🧪 Testing
 
-- Name: Required, 2-100 characters
-- Document Number: Required, unique, 8-20 characters
-- Email: Required, unique, valid format
-- Phone: Required, 7-20 characters
-- Address: Required
-- Status: Auto-set to 'active' on creation
-- Soft Delete: Deletion marks as 'inactive'
+### Ejecutar todos los tests
 
-## 🔌 REST API Endpoints
+```bash
+npm test
+```
+
+### Ejecutar tests en modo watch
+
+```bash
+npm run test:watch
+```
+
+### Ver cobertura de código
+
+```bash
+npm run test:coverage
+```
+
+### Tests incluidos
+
+- ✅ Tests unitarios de casos de uso
+- ✅ Tests de integración de endpoints REST
+- ✅ Tests del flujo agente → API
+
+## 📡 Endpoints API
 
 ### Base URL
+
 ```
-http://localhost:3000
+http://localhost:3000/api
 ```
 
-### Endpoints
+### Customers Endpoints
 
-#### Create Customer
+#### 1. Listar todos los clientes
+
 ```http
-POST /customers
-Content-Type: application/json
+GET /api/customers
+```
 
+**Query Parameters:**
+- `status` (opcional): Filtrar por estado (active, inactive)
+- `limit` (opcional): Número de resultados (default: 10)
+- `offset` (opcional): Paginación (default: 0)
+
+**Respuesta:**
+```json
 {
-  "name": "Juan Pérez",
-  "documentNumber": "12345678",
-  "email": "juan@email.com",
-  "phone": "987654321",
-  "address": "Av. Principal 123"
+  "customers": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "Juan Pérez",
+      "documentNumber": "12345678",
+      "email": "juan@example.com",
+      "phone": "987654321",
+      "address": "Av. Principal 123",
+      "status": "active",
+      "createdAt": "2026-04-23T22:00:00.000Z",
+      "updatedAt": "2026-04-23T22:00:00.000Z"
+    }
+  ],
+  "total": 1
 }
+```
 
-Response: 201 Created
+#### 2. Obtener cliente por ID
+
+```http
+GET /api/customers/:id
+```
+
+**Respuesta:**
+```json
 {
-  "id": "uuid-here",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
   "name": "Juan Pérez",
   "documentNumber": "12345678",
-  "email": "juan@email.com",
+  "email": "juan@example.com",
   "phone": "987654321",
   "address": "Av. Principal 123",
   "status": "active",
-  "createdAt": "2026-04-23T...",
-  "updatedAt": "2026-04-23T..."
+  "createdAt": "2026-04-23T22:00:00.000Z",
+  "updatedAt": "2026-04-23T22:00:00.000Z"
 }
 ```
 
-#### List Customers
+#### 3. Crear nuevo cliente
+
 ```http
-GET /customers?status=active
-
-Response: 200 OK
-{
-  "customers": [...],
-  "total": 10
-}
-```
-
-#### Get Customer by ID
-```http
-GET /customers/:id
-
-Response: 200 OK
-{
-  "id": "uuid-here",
-  "name": "Juan Pérez",
-  ...
-}
-```
-
-#### Update Customer
-```http
-PUT /customers/:id
+POST /api/customers
 Content-Type: application/json
+```
 
+**Body:**
+```json
 {
-  "name": "Juan Pérez Updated",
-  "phone": "999888777"
-}
-
-Response: 200 OK
-{
-  "id": "uuid-here",
-  "name": "Juan Pérez Updated",
-  "phone": "999888777",
-  ...
+  "name": "Juan Pérez",
+  "documentNumber": "12345678",
+  "email": "juan@example.com",
+  "phone": "987654321",
+  "address": "Av. Principal 123"
 }
 ```
 
-#### Delete Customer
-```http
-DELETE /customers/:id
-
-Response: 200 OK
+**Respuesta:**
+```json
 {
-  "success": true,
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Juan Pérez",
+  "documentNumber": "12345678",
+  "email": "juan@example.com",
+  "phone": "987654321",
+  "address": "Av. Principal 123",
+  "status": "active",
+  "createdAt": "2026-04-23T22:00:00.000Z",
+  "updatedAt": "2026-04-23T22:00:00.000Z"
+}
+```
+
+#### 4. Actualizar cliente
+
+```http
+PUT /api/customers/:id
+Content-Type: application/json
+```
+
+**Body (todos los campos opcionales):**
+```json
+{
+  "name": "Juan Pérez Actualizado",
+  "email": "nuevo@example.com",
+  "phone": "999888777",
+  "address": "Nueva Dirección 456"
+}
+```
+
+#### 5. Eliminar cliente
+
+```http
+DELETE /api/customers/:id
+```
+
+**Respuesta:**
+```json
+{
   "message": "Customer deleted successfully"
 }
 ```
 
-## 🤖 Intelligent Agent
+## 🤖 Agente Inteligente
 
-### Natural Language Interface
+El agente inteligente permite interactuar con el sistema usando lenguaje natural en español.
 
-The agent provides a conversational interface to interact with the system.
+### Endpoint
 
-#### Endpoint
 ```http
-POST /agent
+POST /api/agent
 Content-Type: application/json
+```
 
+### Ejemplos de uso
+
+#### Crear un cliente
+
+```json
 {
-  "query": "registra un cliente llamado Juan con DNI 12345678"
+  "input": "Registra un cliente llamado Juan Pérez con DNI 12345678, email juan@example.com, teléfono 987654321 y dirección Av. Principal 123"
 }
+```
 
-Response: 200 OK
+**Respuesta:**
+```json
 {
   "success": true,
-  "message": "Cliente registrado exitosamente",
-  "data": { ... }
+  "message": "Cliente \"Juan Pérez\" creado exitosamente con ID: 550e8400-e29b-41d4-a716-446655440000",
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Juan Pérez",
+    "documentNumber": "12345678",
+    "email": "juan@example.com",
+    "phone": "987654321",
+    "address": "Av. Principal 123",
+    "status": "active",
+    "createdAt": "2026-04-23T22:00:00.000Z",
+    "updatedAt": "2026-04-23T22:00:00.000Z"
+  },
+  "intent": "CREATE_CUSTOMER"
 }
 ```
 
-### Supported Intents
+#### Buscar un cliente
 
-| Intent | Example Queries |
-|--------|----------------|
-| CREATE_CUSTOMER | "registra un cliente", "crear cliente Juan" |
-| GET_CUSTOMER | "busca cliente por DNI 12345678", "obtener cliente" |
-| LIST_CUSTOMERS | "lista todos los clientes", "muestra clientes" |
-| UPDATE_CUSTOMER | "actualiza cliente", "modifica datos" |
-| DELETE_CUSTOMER | "elimina cliente", "borra cliente por DNI" |
-
-### Flow
-
-```
-User Query → Intent Classifier → Orchestrator → Use Case → Repository → Response
+```json
+{
+  "input": "Busca cliente con id 550e8400-e29b-41d4-a716-446655440000"
+}
 ```
 
-## 🔐 Security
+#### Listar clientes
 
-### Implemented Measures
+```json
+{
+  "input": "Lista todos los clientes"
+}
+```
 
-1. **Helmet.js**
-   - Security headers
-   - XSS protection
-   - Clickjacking prevention
+```json
+{
+  "input": "Muestra los clientes activos"
+}
+```
 
-2. **CORS**
-   - Controlled cross-origin access
-   - Configurable allowed origins
+#### Actualizar un cliente
 
-3. **Rate Limiting**
-   - API: 100 requests per 15 minutes
-   - Create endpoints: 10 requests per 15 minutes
+```json
+{
+  "input": "Actualiza cliente con id 550e8400-e29b-41d4-a716-446655440000 nombre María González"
+}
+```
 
-4. **Input Sanitization**
-   - SQL injection prevention
-   - XSS attack prevention
-   - HTML escaping
+#### Eliminar un cliente
 
-5. **Error Handling**
-   - Centralized error management
-   - No sensitive data leakage
-   - Proper HTTP status codes
+```json
+{
+  "input": "Elimina el cliente con id 550e8400-e29b-41d4-a716-446655440000"
+}
+```
 
-### OWASP Compliance
+### Intenciones soportadas
 
-- Injection prevention
-- Broken authentication handling
-- Sensitive data exposure mitigation
-- Security misconfiguration prevention
-- XSS protection
+- ✅ `CREATE_CUSTOMER`: Crear nuevo cliente
+- ✅ `GET_CUSTOMER`: Obtener cliente específico
+- ✅ `LIST_CUSTOMERS`: Listar clientes
+- ✅ `UPDATE_CUSTOMER`: Actualizar cliente
+- ✅ `DELETE_CUSTOMER`: Eliminar cliente
+- ❓ `UNKNOWN`: Intención no reconocida
 
-## 🧪 Testing
+## 🐳 Docker
 
-### Run Tests
+### Construir imagen
 
 ```bash
-# All tests
-npm test
-
-# Unit tests only
-npm run test:unit
-
-# Integration tests only
-npm run test:integration
-
-# With coverage
-npm run test:coverage
+docker build -t customer-management-api .
 ```
 
-### Test Coverage
-
-- **Unit Tests**: Use cases, domain logic
-- **Integration Tests**: Complete HTTP → Repository flow
-- **Test Scenarios**: Success cases, validation errors, business rules
-
-### Example Test
-
-```typescript
-describe('CreateCustomerUseCase', () => {
-  it('should create a customer with valid data', async () => {
-    const result = await createCustomerUseCase.execute({
-      name: 'Juan Pérez',
-      documentNumber: '12345678',
-      email: 'juan@email.com',
-      phone: '987654321',
-      address: 'Av. Principal 123'
-    });
-    
-    expect(result).toHaveProperty('id');
-    expect(result.status).toBe('active');
-  });
-});
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js >= 16
-- npm >= 7
-
-### Installation
+### Ejecutar contenedor
 
 ```bash
-# Clone the repository
-cd customer-management-api
-
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run dev
-
-# Build for production
-npm run build
-
-# Run production build
-npm start
+docker run -p 3000:3000 customer-management-api
 ```
 
-### Environment Variables
+### Docker Compose (próximamente)
 
-Create a `.env` file:
-
-```env
-PORT=3000
-NODE_ENV=development
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+```yaml
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
 ```
 
-## 📝 Usage Examples
+## ☁️ Despliegue
 
-### Using REST API
+### Azure Web App
+
+Sigue la guía completa en [AZURE_QUICKSTART.md](./AZURE_QUICKSTART.md)
+
+**Pasos rápidos:**
+
+1. Crear Web App en Azure Portal
+2. Configurar CI/CD con GitHub Actions (archivo incluido)
+3. Push a rama `main` para desplegar automáticamente
+
+Ver [AZURE_DEPLOYMENT.md](./AZURE_DEPLOYMENT.md) para instrucciones detalladas.
+
+## 📚 Documentación
+
+### Documentación técnica
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Diagramas de arquitectura y secuencia
+- [AZURE_DEPLOYMENT.md](./AZURE_DEPLOYMENT.md) - Guía completa de despliegue en Azure
+- [AZURE_QUICKSTART.md](./AZURE_QUICKSTART.md) - Guía rápida de Azure
+
+### Principios aplicados
+
+- ✅ **SOLID**: Responsabilidad única, Open/Closed, Liskov, Segregación de interfaces, Inversión de dependencias
+- ✅ **Clean Architecture**: Separación de capas, independencia de frameworks
+- ✅ **DRY**: Don't Repeat Yourself
+- ✅ **KISS**: Keep It Simple, Stupid
+- ✅ **YAGNI**: You Aren't Gonna Need It
+
+### Seguridad (OWASP)
+
+- ✅ **Helmet**: Headers de seguridad HTTP
+- ✅ **CORS**: Control de acceso entre orígenes
+- ✅ **Rate Limiting**: Prevención de ataques DDoS
+- ✅ **Input Sanitization**: Prevención de XSS e inyección
+- ✅ **Error Handling**: Manejo seguro de errores sin exponer información sensible
+
+## 🛠️ Scripts disponibles
 
 ```bash
-# Create customer
-curl -X POST http://localhost:3000/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Juan Pérez",
-    "documentNumber": "12345678",
-    "email": "juan@email.com",
-    "phone": "987654321",
-    "address": "Av. Principal 123"
-  }'
+# Desarrollo
+npm run dev          # Inicia servidor con hot-reload
+npm run build        # Compila TypeScript a JavaScript
+npm start            # Ejecuta versión compilada
 
-# List customers
-curl http://localhost:3000/customers
+# Testing
+npm test             # Ejecuta todos los tests
+npm run test:watch   # Tests en modo watch
+npm run test:coverage # Genera reporte de cobertura
 
-# Get by ID
-curl http://localhost:3000/customers/{id}
-
-# Update customer
-curl -X PUT http://localhost:3000/customers/{id} \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Juan Updated"}'
-
-# Delete customer
-curl -X DELETE http://localhost:3000/customers/{id}
+# Linting (si se configura)
+npm run lint         # Verifica código
+npm run lint:fix     # Corrige problemas automáticamente
 ```
 
-### Using Agent Interface
+## 🤝 Contribuir
 
-```bash
-# Natural language interaction
-curl -X POST http://localhost:3000/agent \
-  -H "Content-Type: application/json" \
-  -d '{"query": "registra un cliente llamado María con DNI 87654321"}'
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-curl -X POST http://localhost:3000/agent \
-  -H "Content-Type: application/json" \
-  -d '{"query": "busca cliente por DNI 12345678"}'
-```
+## 📄 Licencia
 
-## 🔄 Use Cases
+Este proyecto está bajo la Licencia MIT.
 
-### CreateCustomerUseCase
-- Validates input data
-- Checks for duplicates (document/email)
-- Creates customer entity
-- Persists to repository
+## 👥 Autor
 
-### GetCustomerUseCase
-- Retrieves customer by ID
-- Returns 404 if not found
+Desarrollado como demostración de arquitectura limpia y buenas prácticas en Node.js/TypeScript.
 
-### ListCustomersUseCase
-- Lists all customers
-- Optional status filter
-- Returns count and list
+## 📞 Soporte
 
-### UpdateCustomerUseCase
-- Validates customer exists
-- Updates allowed fields
-- Maintains data integrity
+Para preguntas o problemas:
+- Abre un issue en el repositorio
+- Consulta la documentación en la carpeta `/docs`
 
-### DeleteCustomerUseCase
-- Soft delete (marks as inactive)
-- Preserves data for auditing
+## 🗺️ Roadmap
 
-## 🛠️ Development
-
-### Adding New Features
-
-1. **Domain**: Define entities and business rules
-2. **Application**: Create use case
-3. **Infrastructure**: Implement repository methods
-4. **Controllers**: Add REST endpoint
-5. **Tests**: Write unit and integration tests
-6. **Agent**: Add intent if needed
-
-### Code Quality
-
-- TypeScript for type safety
-- ESLint for code linting
-- Prettier for code formatting
-- Jest for testing
-
-## 📦 Dependencies
-
-### Production
-- express: Web framework
-- helmet: Security headers
-- cors: CORS management
-- express-rate-limit: Rate limiting
-- joi: Input validation
-- uuid: ID generation
-
-### Development
-- typescript: Type system
-- jest: Testing framework
-- supertest: HTTP testing
-- @types/*: TypeScript definitions
-
-## 🤝 Contributing
-
-1. Follow Clean Architecture principles
-2. Write tests for new features
-3. Maintain SOLID principles
-4. Document API changes
-5. Use meaningful commit messages
-
-## 📄 License
-
-ISC License
-
-## 👥 Authors
-
-Developed as a demonstration of Clean Architecture, SOLID principles, and modern backend development practices.
-
-## 📞 Support
-
-For issues or questions, please refer to the code documentation and test examples.
+- [ ] Integración con base de datos real (MongoDB/PostgreSQL)
+- [ ] Autenticación y autorización (JWT)
+- [ ] Websockets para notificaciones en tiempo real
+- [ ] Integración con servicios externos
+- [ ] Dashboard administrativo
+- [ ] Métricas y monitoring (Prometheus/Grafana)
+- [ ] API Gateway
+- [ ] Microservicios
 
 ---
 
-**Note**: This system uses an in-memory repository by default. For production, implement a persistent repository (MongoDB, PostgreSQL, etc.) following the same interface.
+**¡Gracias por usar Customer Management API!** 🚀
